@@ -32,7 +32,7 @@ import sys
 from contextlib import contextmanager
 from setuptools import Extension, setup
 
-IS_PYTHON3 = sys.version_info.major >= 3
+IS_PYTHON3 = sys.version_info[0] >= 3
 
 
 @contextmanager
@@ -51,7 +51,7 @@ def configure_library(library_dir, env_options=None, options=[]):
 
     if not os.path.exists(configure_script):
         raise ValueError(
-            "configure script {} does not exist".format(configure_script))
+            "configure script {0} does not exist".format(configure_script))
 
     def run_configure(option):
         try:
@@ -135,7 +135,7 @@ EXCLUDE = {
         'htslib/htsfile.c', 'htslib/hfile_irods.c'),
 }
 
-print ("# pysam: htslib mode is {}".format(HTSLIB_MODE))
+print ("# pysam: htslib mode is {0}".format(HTSLIB_MODE))
 
 htslib_configure_options = None
 
@@ -146,7 +146,7 @@ if HTSLIB_MODE in ['shared', 'separate']:
         ["--enable-libcurl"])
 
     HTSLIB_SOURCE = "builtin"
-    print ("# pysam: htslib configure options: {}".format(
+    print ("# pysam: htslib configure options: {0}".format(
         str(htslib_configure_options)))
 
     if htslib_configure_options is None:
@@ -200,14 +200,14 @@ elif HTSLIB_MODE == 'shared':
     if IS_PYTHON3:
         import sysconfig
         if sys.version_info.minor >= 5:
-            internal_htslib_libraries = ["chtslib.{}".format(
+            internal_htslib_libraries = ["chtslib.{0}".format(
                 sysconfig.get_config_var('SOABI'))]
         else:
             if sys.platform == "darwin":
                 # On OSX, python 3.3 and 3.4 Libs have no platform tags.
                 internal_htslib_libraries = ["chtslib"]
             else:
-                internal_htslib_libraries = ["chtslib.{}{}".format(
+                internal_htslib_libraries = ["chtslib.{0}{1}".format(
                     sys.implementation.cache_tag,
                     sys.abiflags)]
     else:
@@ -219,7 +219,7 @@ else:
 
 # build config.py
 with open(os.path.join("pysam", "config.py"), "w") as outf:
-    outf.write('HTSLIB = "{}"\n'.format(HTSLIB_SOURCE))
+    outf.write('HTSLIB = "{0}"\n'.format(HTSLIB_SOURCE))
     config_values = collections.defaultdict(int)
 
     if HTSLIB_SOURCE == "builtin":
@@ -236,7 +236,7 @@ with open(os.path.join("pysam", "config.py"), "w") as outf:
                         "HAVE_IRODS",
                         "HAVE_LIBCURL",
                         "HAVE_MMAP"]:
-                outf.write("{} = {}\n".format(key, config_values[key]))
+                outf.write("{0} = {1}\n".format(key, config_values[key]))
 
 
 if HTSLIB_SOURCE == "builtin":
@@ -294,7 +294,7 @@ if IS_PYTHON3:
 fn = source_pattern % "htslib"
 if not os.path.exists(fn):
     raise ValueError(
-        "no cython installed, but can not find {}."
+        "no cython installed, but can not find {0}."
         "Make sure that cython is installed when building "
         "from the repository"
         .format(fn))
